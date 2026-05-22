@@ -124,7 +124,6 @@ dist
 
 # IDEs
 .idea/
-.vscode/
 
 # yarn v2
 .yarn/cache

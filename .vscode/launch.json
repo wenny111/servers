@@ -1,0 +1,53 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "1. Launch MCP Inspector + everything server",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "@modelcontextprotocol/inspector"
+      ],
+      "args": [
+        "node",
+        "--inspect-brk=9229",
+        "${workspaceFolder}/src/everything/dist/index.js"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        "CLIENT_PORT": "6281",
+        "SERVER_PORT": "6283",
+        "DANGEROUSLY_OMIT_AUTH": "true"
+      },
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "2. Attach to everything server",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/src/everything/dist/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug MCP everything server with Inspector-",
+      "configurations": [
+        "1. Launch MCP Inspector + everything server",
+        "2. Attach to everything server"
+      ],
+      "stopAll": true
+    }
+  ]
+}
