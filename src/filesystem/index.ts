@@ -28,6 +28,7 @@ import {
   setAllowedDirectories,
 } from './lib.js';
 
+// @DATA: 解析启动参数
 // Command line argument parsing
 const args = process.argv.slice(2);
 if (args.length === 0) {
@@ -38,6 +39,8 @@ if (args.length === 0) {
   console.error("At least one directory must be provided by EITHER method for the server to operate.");
 }
 
+// @DATA: server的安全核心：启动参数先转成server可访问的目录白名单
+// 两个来源：命令行参数和MCP roots协议
 // Store allowed directories in normalized and resolved form
 // We store BOTH the original path AND the resolved path to handle symlinks correctly
 // This fixes the macOS /tmp -> /private/tmp symlink issue where users specify /tmp
@@ -92,6 +95,7 @@ allowedDirectories = accessibleDirectories;
 // Initialize the global allowedDirectories in lib.ts
 setAllowedDirectories(allowedDirectories);
 
+// @DATA: 每个 MCP tool 的输入契约先用 Zod schema 固定下来
 // Schema definitions
 const ReadTextFileArgsSchema = z.object({
   path: z.string(),
@@ -159,6 +163,7 @@ const GetFileInfoArgsSchema = z.object({
   path: z.string(),
 });
 
+// @CORE: 注册 McpServer
 // Server setup
 const server = new McpServer(
   {
@@ -170,6 +175,7 @@ const server = new McpServer(
 // Reads a file as a stream of buffers, concatenates them, and then encodes
 // the result to a Base64 string. This is a memory-efficient way to handle
 // binary data from a stream before the final encoding.
+// 
 async function readFileAsBase64Stream(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const stream = createReadStream(filePath);
@@ -187,6 +193,7 @@ async function readFileAsBase64Stream(filePath: string): Promise<string> {
 
 // Tool registrations
 
+// @CORE: handler 先做路径校验，再执行真实文件读取
 // read_file (deprecated) and read_text_file
 const readTextFileHandler = async (args: z.infer<typeof ReadTextFileArgsSchema>) => {
   const validPath = await validatePath(args.path);
@@ -205,8 +212,8 @@ const readTextFileHandler = async (args: z.infer<typeof ReadTextFileArgsSchema>)
   }
 
   return {
-    content: [{ type: "text" as const, text: content }],
-    structuredContent: { content }
+    content: [{ type: "text" as const, text: content }], // 给聊天界面/LLM看的协议标准输出
+    structuredContent: { content } // 给 MCP client 用的结构化结果
   };
 };
 
@@ -548,6 +555,7 @@ server.registerTool(
     }
     const rootPath = args.path;
 
+    // @DATA: tool 可以返回结构化 JSON，方便客户端继续处理目录树
     async function buildTree(currentPath: string, excludePatterns: string[] = []): Promise<TreeEntry[]> {
       const validPath = await validatePath(currentPath);
       const entries = await fs.readdir(validPath, { withFileTypes: true });
@@ -702,6 +710,7 @@ server.registerTool(
   }
 );
 
+// @CORE: Roots 协议会在运行时替换文件系统访问边界
 // Updates allowed directories based on MCP client roots
 async function updateAllowedDirectoriesFromRoots(requestedRoots: Root[]) {
   const validatedRootDirs = await getValidRootDirectories(requestedRoots);
@@ -714,6 +723,7 @@ async function updateAllowedDirectoriesFromRoots(requestedRoots: Root[]) {
   }
 }
 
+// @LEARN: server 可监听客户端通知，并反向请求最新 roots
 // Handles dynamic roots updates during runtime, when client sends "roots/list_changed" notification, server fetches the updated roots and replaces all allowed directories with the new roots.
 server.server.setNotificationHandler(RootsListChangedNotificationSchema, async () => {
   try {
@@ -727,6 +737,7 @@ server.server.setNotificationHandler(RootsListChangedNotificationSchema, async (
   }
 });
 
+// @LEARN: server 可监听客户端通知，并反向请求最新 roots
 // Handles post-initialization setup, specifically checking for and fetching MCP roots.
 server.server.oninitialized = async () => {
   const clientCapabilities = server.server.getClientCapabilities();
@@ -751,6 +762,7 @@ server.server.oninitialized = async () => {
   }
 };
 
+// @CORE: 启动 server，连接 stdio transport
 // Start server
 async function runServer() {
   const transport = new StdioServerTransport();

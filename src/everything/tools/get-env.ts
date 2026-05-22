@@ -25,6 +25,8 @@ const config = {
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  * @returns {void}
  */
+ // @LEARN: 不需要输入 schema 的 Tool — inputSchema: {} 即可
+ // @LEARN: 直接返回 process.env 可用来调试 MCP Server 的环境配置
 export const registerGetEnvTool = (server: McpServer) => {
   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
     return {

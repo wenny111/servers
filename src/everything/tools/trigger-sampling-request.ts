@@ -42,6 +42,8 @@ const config = {
  *
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  */
+ // @CORE: 演示 MCP sampling 能力 — 服务端请求客户端调用 LLM 完成采样
+ // @LEARN: 通过 extra.sendRequest 发送 sampling/createMessage 请求
 export const registerTriggerSamplingRequestTool = (server: McpServer) => {
   // Does the client support sampling?
   const clientCapabilities = server.server.getClientCapabilities() || {};

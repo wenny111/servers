@@ -13,6 +13,8 @@ import { readdirSync, readFileSync, statSync } from "fs";
  *
  * @param server
  */
+ // @CORE: 注册静态文件资源 — 扫描 docs 目录，每个文件暴露为一个 resource
+ // @DATA: URI 模式 "demo://resource/static/document/<filename>"
 export const registerFileResources = (server: McpServer) => {
   // Read the entries in the docs directory
   const __filename = fileURLToPath(import.meta.url);

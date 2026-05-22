@@ -24,6 +24,7 @@ export const RESOURCE_TYPES: string[] = [
  * The input value is expected to be a string representing the type of resource to fetch.
  * The completion logic matches the input against available resource types.
  */
+ // @LEARN: completable 包装器 — 给参数添加自动补全回调，提升客户端使用体验
 export const resourceTypeCompleter = completable(
   z.string().describe("Type of resource to fetch"),
   (value: string) => {
@@ -136,6 +137,7 @@ export const blobResourceUri = (resourceId: number) =>
  * @returns {number} The parsed and validated resource identifier as an integer.
  * @throws {Error} Throws an error if the URI matches unsupported base URIs or if the resourceId is invalid.
  */
+ // @CORE: 从 URI 模板变量中提取 resourceId，校验合法性后返回
 const parseResourceId = (uri: URL, variables: Record<string, unknown>) => {
   const uriError = `Unknown resource: ${uri.toString()}`;
   if (
@@ -168,6 +170,8 @@ const parseResourceId = (uri: URL, variables: Record<string, unknown>) => {
  *
  * @param server
  */
+ // @LEARN: ResourceTemplate — URI 模板方式注册动态资源，资源随 URI 参数变化
+ // @LEARN: 支持 list/complete 回调，提供资源列表和自动补全能力
 export const registerResourceTemplates = (server: McpServer) => {
   // Register the text resource template
   server.registerResource(

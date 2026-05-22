@@ -6,6 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
  *
  * @param server
  */
+ // @LEARN: 最简单的 Prompt 定义 — 无参数，固定返回一段文本消息
 export const registerSimplePrompt = (server: McpServer) => {
   // Register the prompt
   server.registerPrompt(

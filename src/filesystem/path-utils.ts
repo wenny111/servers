@@ -7,6 +7,7 @@ import os from 'os';
  * @returns Converted Windows path
  */
 export function convertToWindowsPath(p: string): string {
+  // @Q: WSL 路径必须保留 Linux 形态，否则 Node fs 会访问失败
   // Handle WSL paths (/mnt/c/...)
   // NEVER convert WSL paths - they are valid Linux paths that work with Node.js fs operations in WSL
   // Converting them to Windows format (C:\...) breaks fs operations inside WSL
@@ -37,6 +38,7 @@ export function convertToWindowsPath(p: string): string {
  * @returns Normalized path
  */
 export function normalizePath(p: string): string {
+  // @CORE: 路径规范化统一处理跨平台差异，是后续安全判断的基础
   // Remove any surrounding quotes and whitespace
   p = p.trim().replace(/^["']|["']$/g, '');
 

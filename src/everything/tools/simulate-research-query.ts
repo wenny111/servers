@@ -53,6 +53,8 @@ const researchStates = new Map<string, ResearchState>();
  * sendRequest will fail and the task will use a default interpretation.
  * Full HTTP support requires SDK PR #1210's elicitInputStream API.
  */
+ // @CORE: 演示 MCP Tasks 异步执行流程 — 后台分阶段执行，可 elicitation 交互
+ // @LEARN: Tasks 实现"先调用后取结果"模式，支持 working→input_required→completed 状态流转
 async function runResearchProcess(
   taskId: string,
   args: z.infer<typeof SimulateResearchQuerySchema>,
@@ -239,6 +241,8 @@ requires SDK PR #1210's streaming \`elicitInputStream\` API.
  *
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  */
+ // @CORE: 使用 experimental.tasks.registerToolTask 注册基于任务的工具
+ // @LEARN: 与普通 registerTool 不同，task-based tool 返回 CreateTaskResult 而非最终结果
 export const registerSimulateResearchQueryTool = (server: McpServer) => {
   // Check if client supports elicitation (needed for input_required flow)
   const clientCapabilities = server.server.getClientCapabilities() || {};

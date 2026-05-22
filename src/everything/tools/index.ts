@@ -22,6 +22,7 @@ import { registerSimulateResearchQueryTool } from "./simulate-research-query.js"
  * Register the tools with the MCP server.
  * @param server
  */
+ // @CORE: 注册所有无条件工具 — 这些工具不依赖客户端 capabilities
 export const registerTools = (server: McpServer) => {
   registerEchoTool(server);
   registerGetAnnotatedMessageTool(server);
@@ -41,6 +42,7 @@ export const registerTools = (server: McpServer) => {
  * Register the tools that are conditional upon client capabilities.
  * These must be registered conditionally, after initialization.
  */
+ // @CORE: 注册条件工具 — 依赖客户端 capability（roots/sampling/elicitation/tasks），初始化后才可注册
 export const registerConditionalTools = (server: McpServer) => {
   registerGetRootsListTool(server);
   registerTriggerElicitationRequestTool(server);

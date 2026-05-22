@@ -30,6 +30,7 @@ const config = {
  *
  * @param server - The McpServer instance where the tool will be registered.
  */
+ // @LEARN: 返回图片类型内容 — content 支持 type: "image"，base64 编码嵌入
 export const registerGetTinyImageTool = (server: McpServer) => {
   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
     return {

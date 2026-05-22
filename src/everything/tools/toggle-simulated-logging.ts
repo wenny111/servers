@@ -34,6 +34,8 @@ const clients: Set<string | undefined> = new Set<string | undefined>();
  *
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  */
+ // @LEARN: 演示 MCP logging 能力 — 服务端可主动向客户端推送日志消息
+ // @LEARN: sessionId 用于区分不同客户端（SSE/HTTP），stdio 模式下为 undefined
 export const registerToggleSimulatedLoggingTool = (server: McpServer) => {
   server.registerTool(
     name,

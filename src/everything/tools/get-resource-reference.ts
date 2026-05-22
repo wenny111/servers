@@ -43,6 +43,7 @@ const config = {
  * reference. Supported resource types include predefined `RESOURCE_TYPE_TEXT` and
  * `RESOURCE_TYPE_BLOB`. The retrieved resource's reference will include the resource
  * ID, type, and its associated URI.
+ * @LEARN: type: "resource" 的 content block — 将完整资源嵌入工具响应中
  *
  * The tool performs the following operations:
  * 1. Validates the `resourceType` argument to ensure it matches a supported type.

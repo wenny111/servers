@@ -39,6 +39,7 @@ const config = {
  *
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  */
+ // @LEARN: 演示进度通知 — 通过 progressToken 发送 notifications/progress
 export const registerTriggerLongRunningOperationTool = (server: McpServer) => {
   server.registerTool(
     name,

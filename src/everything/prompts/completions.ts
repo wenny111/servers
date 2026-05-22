@@ -10,6 +10,8 @@ import { completable } from "@modelcontextprotocol/sdk/server/completable.js";
  *
  * @param server
  */
+ // @LEARN: 带自动补全的 Prompt — completable 包装参数，第二个参数的补全依赖第一个参数的值
+ // @LEARN: context.arguments 可在补全回调中读取其他参数的值，实现级联补全
 export const registerPromptWithCompletions = (server: McpServer) => {
   // Prompt arguments
   const promptArgsSchema = {
@@ -21,7 +23,7 @@ export const registerPromptWithCompletions = (server: McpServer) => {
         );
       }
     ),
-    name: completable(
+    name: completable(                                                                                               
       z
         .string()
         .describe("Choose a team member to lead the selected department."),

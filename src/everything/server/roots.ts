@@ -4,7 +4,8 @@ import {
   RootsListChangedNotificationSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-// Track roots by session id
+// @DATA: 按 sessionId 缓存客户端的 Roots 列表
+// @LEARN: Roots 是 MCP 协议中客户端向服务端暴露文件系统根目录的机制
 export const roots: Map<string | undefined, Root[]> = new Map<
   string | undefined,
   Root[]

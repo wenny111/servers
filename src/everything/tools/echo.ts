@@ -2,12 +2,13 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 
+// @LEARN: 最简单的 MCP Tool 写法 — 用 Zod 定义入参 schema，实现回调函数即可
 // Tool input schema
 export const EchoSchema = z.object({
   message: z.string().describe("Message to echo"),
 });
 
-// Tool configuration
+// @DATA: 工具元数据 — annotations 描述工具行为（只读/幂等/非破坏性），供客户端优化调用策略
 const name = "echo";
 const config = {
   title: "Echo Tool",

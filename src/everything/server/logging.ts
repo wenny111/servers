@@ -1,7 +1,7 @@
 import { LoggingLevel } from "@modelcontextprotocol/sdk/types.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-// Map session ID to the interval for sending logging messages to the client
+// @DATA: 按 sessionId 跟踪模拟日志的定时器（stdio 模式下 sessionId 为 undefined）
 const logsUpdateIntervals: Map<string | undefined, NodeJS.Timeout | undefined> =
   new Map<string | undefined, NodeJS.Timeout | undefined>();
 
@@ -13,6 +13,7 @@ const logsUpdateIntervals: Map<string | undefined, NodeJS.Timeout | undefined> =
  * @param {string | undefined} sessionId - An optional identifier for the session. If provided,
  * the session ID will be appended to log messages.
  */
+ // @CORE: 启动模拟日志 — 每5秒向客户端发送随机等级的 log message
 export const beginSimulatedLogging = (
   server: McpServer,
   sessionId: string | undefined

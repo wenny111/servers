@@ -7,6 +7,7 @@ import { minimatch } from 'minimatch';
 import { normalizePath, expandHome } from './path-utils.js';
 import { isPathWithinAllowedDirectories } from './path-validation.js';
 
+// @DATA: 访问白名单由入口模块注入，所有文件操作共享这份状态
 // Global allowed directories - set by the main module
 let allowedDirectories: string[] = [];
 
@@ -95,6 +96,7 @@ function resolveRelativePathAgainstAllowedDirectories(relativePath: string): str
   return path.resolve(allowedDirectories[0], relativePath);
 }
 
+// @CORE: 所有文件操作前都必须经过统一路径校验
 // Security & Validation Functions
 export async function validatePath(requestedPath: string): Promise<string> {
   const expandedPath = expandHome(requestedPath);
@@ -110,6 +112,7 @@ export async function validatePath(requestedPath: string): Promise<string> {
     throw new Error(`Access denied - path outside allowed directories: ${absolute} not in ${allowedDirectories.join(', ')}`);
   }
 
+  // @Q: 新增写入场景只校验父目录，仍需关注校验到写入之间的竞态
   // Security: Handle symlinks by checking their real path to prevent symlink attacks
   // This prevents attackers from creating symlinks that point outside allowed directories
   try {
@@ -160,6 +163,7 @@ export async function readFileContent(filePath: string, encoding: string = 'utf-
 
 export async function writeFileContent(filePath: string, content: string): Promise<void> {
   try {
+    // @CORE: 写文件要避免跟随已有 symlink 越过白名单
     // Security: 'wx' flag ensures exclusive creation - fails if file/symlink exists,
     // preventing writes through pre-existing symlinks
     await fs.writeFile(filePath, content, { encoding: "utf-8", flag: 'wx' });
@@ -196,6 +200,7 @@ export async function applyFileEdits(
   edits: FileEdit[],
   dryRun: boolean = false
 ): Promise<string> {
+  // @LEARN: edit tool 用精确文本替换配合 diff，适合让模型先预览修改
   // Read file content and normalize line endings
   const content = normalizeLineEndings(await fs.readFile(filePath, 'utf-8'));
 
@@ -263,6 +268,7 @@ export async function applyFileEdits(
   const formattedDiff = `${'`'.repeat(numBackticks)}diff\n${diff}${'`'.repeat(numBackticks)}\n\n`;
 
   if (!dryRun) {
+    // @CORE: 实际落盘走临时文件 rename，降低部分写入和 symlink 竞态风险
     // Security: Use atomic rename to prevent race conditions where symlinks
     // could be created between validation and write. Rename operations
     // replace the target file atomically and don't follow symlinks.
@@ -387,6 +393,7 @@ export async function searchFilesWithValidation(
       const fullPath = path.join(currentPath, entry.name);
 
       try {
+        // @CORE: 递归搜索时每个候选路径仍然要重新过白名单校验
         await validatePath(fullPath);
 
         const relativePath = path.relative(rootPath, fullPath);

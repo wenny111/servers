@@ -37,6 +37,8 @@ const MAX_POLL_ATTEMPTS = 600;
  *
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  */
+ // @CORE: 双向 Tasks 示例 — 服务端请求客户端创建任务并轮询结果
+ // @LEARN: 依赖客户端支持 tasks.requests.elicitation.create
 export const registerTriggerElicitationRequestAsyncTool = (
   server: McpServer
 ) => {

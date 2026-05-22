@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-// Parse command line arguments first
+// @CORE: 入口：根据命令行参数选择传输层，动态导入对应模块
 const args = process.argv.slice(2);
 const scriptName = args[0] || "stdio";
 
 async function run() {
   try {
-    // Dynamically import only the requested module to prevent all modules from initializing
+    // @LEARN: 动态 import 避免未使用的模块初始化，按需加载
     switch (scriptName) {
       case "stdio":
         // Import and run the default server

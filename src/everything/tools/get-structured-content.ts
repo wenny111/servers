@@ -12,6 +12,7 @@ const GetStructuredContentInputSchema = {
     .describe("Choose city"),
 };
 
+// @DATA: outputSchema — MCP 允许工具声明结构化输出，客户端可据此校验返回数据
 // Tool output schema
 const GetStructuredContentOutputSchema = z.object({
   temperature: z.number().describe("Temperature in celsius"),
@@ -84,6 +85,7 @@ export const registerGetStructuredContentTool = (server: McpServer) => {
       text: JSON.stringify(weather),
     };
 
+    // @LEARN: 同时返回 content（兼容旧客户端）+ structuredContent（结构化数据）
     return {
       content: [backwardCompatibleContentBlock],
       structuredContent: weather,

@@ -48,6 +48,8 @@ const MAX_POLL_ATTEMPTS = 60;
  *
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  */
+ // @CORE: 双向 Tasks 示例 — 服务端请求客户端异步执行 LLM 采样
+ // @LEARN: 依赖客户端支持 tasks.requests.sampling.createMessage
 export const registerTriggerSamplingRequestAsyncTool = (server: McpServer) => {
   // Check client capabilities
   const clientCapabilities = server.server.getClientCapabilities() || {};

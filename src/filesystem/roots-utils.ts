@@ -12,6 +12,7 @@ import { fileURLToPath } from "url";
  */
 async function parseRootUri(rootUri: string): Promise<string | null> {
   try {
+    // @CORE: Roots 既支持 file:// URI，也兼容普通路径
     const rawPath = rootUri.startsWith('file://') ? fileURLToPath(rootUri) : rootUri;
     const expandedPath = rawPath.startsWith('~/') || rawPath === '~' 
       ? path.join(os.homedir(), rawPath.slice(1)) 
@@ -52,6 +53,7 @@ function formatDirectoryError(dir: string, error?: unknown, reason?: string): st
 export async function getValidRootDirectories(
   requestedRoots: readonly Root[]
 ): Promise<string[]> {
+  // @DATA: 客户端传来的 Root 会被收敛成真实存在的目录列表
   const validatedDirectories: string[] = [];
   
   for (const requestedRoot of requestedRoots) {

@@ -20,6 +20,8 @@ import {
  *
  * @param server
  */
+ // @LEARN: Prompt 内嵌 Resource — messages 中可包含 type: "resource" 的内容块
+ // @LEARN: Prompt 可直接引用动态资源，LLM 在生成回复时可访问资源内容
 export const registerEmbeddedResourcePrompt = (server: McpServer) => {
   // Prompt arguments
   const promptArgsSchema = {

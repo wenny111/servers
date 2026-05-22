@@ -39,6 +39,7 @@ const config = {
  * The registered tool retrieves a specified number of resource links and their metadata.
  * Resource links are dynamically generated as either text or binary blob resources,
  * based on their ID being even or odd.
+ * @LEARN: resource_link 类型 content 允许工具返回可后续读取的资源引用，非内联数据
 
  * The response contains a "text" introductory block and multiple "resource_link" blocks.
  *

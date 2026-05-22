@@ -9,6 +9,7 @@ import path from 'path';
  * @throws Error if given relative paths after normalization
  */
 export function isPathWithinAllowedDirectories(absolutePath: string, allowedDirectories: string[]): boolean {
+  // @CORE: 这是目录白名单判断的最小安全原语
   // Type validation
   if (typeof absolutePath !== 'string' || !Array.isArray(allowedDirectories)) {
     return false;
@@ -61,6 +62,7 @@ export function isPathWithinAllowedDirectories(absolutePath: string, allowedDire
       throw new Error('Allowed directories must be absolute paths after normalization');
     }
 
+    // @DATA: 允许访问白名单目录本身，以及它下面的所有子路径
     // Check if normalizedPath is within normalizedDir
     // Path is inside if it's the same or a subdirectory
     if (normalizedPath === normalizedDir) {
@@ -73,6 +75,7 @@ export function isPathWithinAllowedDirectories(absolutePath: string, allowedDire
       return normalizedPath.startsWith(path.sep);
     }
     
+    // @LEARN: Windows 盘符根目录需要单独处理，不能只拼 path.sep
     // On Windows, also check for drive root (e.g., "C:\")
     if (path.sep === '\\' && normalizedDir.match(/^[A-Za-z]:\\?$/)) {
       // Ensure both paths are on the same drive

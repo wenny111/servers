@@ -33,6 +33,8 @@ const subsUpdateIntervals: Map<string | undefined, NodeJS.Timeout | undefined> =
  *
  * @param {McpServer} server - The server instance to which subscription handlers will be attached.
  */
+ // @CORE: 设置资源的订阅/取消订阅处理器 — 实现 MCP resources/subscribe 协议
+ // @LEARN: 客户端 subscribe 后可实时接收资源变更推送 notifications/resources/updated
 export const setSubscriptionHandlers = (server: McpServer) => {
   // Set the subscription handler
   server.server.setRequestHandler(

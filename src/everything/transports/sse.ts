@@ -5,6 +5,8 @@ import cors from "cors";
 
 console.error("Starting SSE server...");
 
+// @CORE: SSE (Server-Sent Events) 传输 — 基于 HTTP 长连接，支持多会话
+// @LEARN: 每个客户端连接对应一个独立的 sessionId → transport 映射
 // Express app with permissive CORS for testing with Inspector direct connect mode
 const app = express();
 app.use(
@@ -22,7 +24,7 @@ const transports: Map<string, SSEServerTransport> = new Map<
   SSEServerTransport
 >();
 
-// Handle GET requests for new SSE streams
+// @CORE: GET /sse — 客户端建立 SSE 连接，创建新会话
 app.get("/sse", async (req, res) => {
   let transport: SSEServerTransport;
   const { server, cleanup } = createServer();
@@ -45,6 +47,7 @@ app.get("/sse", async (req, res) => {
     const sessionId = transport.sessionId;
     console.error("Client Connected: ", sessionId);
 
+    // SSE — 每个客户端断连清一次：
     // Handle close of connection
     server.server.onclose = async () => {
       const sessionId = transport.sessionId;
@@ -55,7 +58,7 @@ app.get("/sse", async (req, res) => {
   }
 });
 
-// Handle POST requests for client messages
+// @CORE: POST /message — 客户端发送 JSON-RPC 消息到指定会话
 app.post("/message", async (req, res) => {
   // Session Id should exist for POST /message requests
   const sessionId = req?.query?.sessionId as string;

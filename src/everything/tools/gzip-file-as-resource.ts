@@ -70,6 +70,8 @@ const config = {
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  * @throws {Error} Throws an error if an unknown output type is specified.
  */
+ // @LEARN: 复杂工具示例 — 从 URL 抓取数据 → gzip 压缩 → 注册为 session 资源
+ // @LEARN: 工具也可在运行时动态创建资源，结合 outputType 控制返回方式
 export const registerGZipFileAsResourceTool = (server: McpServer) => {
   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
     const {
@@ -132,6 +134,7 @@ export const registerGZipFileAsResourceTool = (server: McpServer) => {
  * @return {URL} The validated and parsed URL object.
  * @throws {Error} If the data URI does not use a supported protocol or does not meet allowed domains criteria.
  */
+ // @LEARN: 安全性校验 — 限制请求协议（仅 http/https/data）和可访问域名
 function validateDataURI(dataUri: string): URL {
   // Validate Inputs
   const url = new URL(dataUri);
@@ -177,6 +180,7 @@ function validateDataURI(dataUri: string): URL {
  * @return {Promise<ArrayBuffer>} A promise that resolves with the response as an ArrayBuffer if successful.
  * @throws {Error} Throws an error if the response size exceeds the defined limit, the fetch times out, or the response is otherwise invalid.
  */
+ // @LEARN: 安全的 HTTP 请求工具 — 带超时、大小限制和 AbortController
 async function fetchSafely(
   url: URL,
   { maxBytes, timeoutMillis }: { maxBytes: number; timeoutMillis: number }

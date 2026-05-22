@@ -36,6 +36,8 @@ const config = {
  *
  * @param {McpServer} server - TThe McpServer instance where the tool will be registered.
  */
+ // @CORE: 演示 MCP elicitation 能力 — 服务端向用户发起交互式提问
+ // @LEARN: 通过 extra.sendRequest 向客户端发送 elicitation/create 请求
 export const registerTriggerElicitationRequestTool = (server: McpServer) => {
   // Does the client support elicitation?
   const clientCapabilities = server.server.getClientCapabilities() || {};

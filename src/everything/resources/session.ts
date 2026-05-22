@@ -6,6 +6,8 @@ import { Resource, ResourceLink } from "@modelcontextprotocol/sdk/types.js";
  * This prevents "Resource already registered" errors when a tool creates a resource
  * with the same URI multiple times during a session.
  */
+ // @DATA: 会话级资源缓存 — 防止同一 URI 重复注册报错
+ // @LEARN: 工具在运行时动态创建的资源绑定到 session，连接断开即销毁
 const registeredResources = new Map<string, RegisteredResource>();
 
 /**

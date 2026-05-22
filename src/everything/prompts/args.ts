@@ -8,6 +8,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
  *
  * @param server
  */
+ // @LEARN: 带参数的 Prompt — Zod schema 描述参数，支持必填和可选
 export const registerArgumentsPrompt = (server: McpServer) => {
   // Prompt arguments
   const promptArgsSchema = {

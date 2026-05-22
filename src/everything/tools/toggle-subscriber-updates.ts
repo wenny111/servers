@@ -37,6 +37,7 @@ const clients: Set<string | undefined> = new Set<string | undefined>();
  *
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  */
+ // @LEARN: 演示资源订阅能力 — 客户端 subscribe 后可实时收到资源变更通知
 export const registerToggleSubscriberUpdatesTool = (server: McpServer) => {
   server.registerTool(
     name,

@@ -34,6 +34,8 @@ const config = {
  *
  * @param {McpServer} server - The McpServer instance where the tool will be registered.
  */
+ // @CORE: 条件工具 — 只在客户端支持 roots capability 时才注册
+ // @LEARN: 通过 server.server.getClientCapabilities() 检查客户端能力
 export const registerGetRootsListTool = (server: McpServer) => {
   // Does client support roots?
   const clientCapabilities = server.server.getClientCapabilities() || {};

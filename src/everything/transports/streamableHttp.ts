@@ -7,6 +7,7 @@ import { createServer } from "../server/index.js";
 import { randomUUID } from "node:crypto";
 import cors from "cors";
 
+// @LEARN: Streamable HTTP 是最新的 MCP 传输协议 — 支持 POST/GET/DELETE 和 SSE 恢复
 // Simple in-memory event store for SSE resumability
 class InMemoryEventStore implements EventStore {
   private events: Map<string, { streamId: string; message: unknown }> =
@@ -56,7 +57,7 @@ const transports: Map<string, StreamableHTTPServerTransport> = new Map<
   StreamableHTTPServerTransport
 >();
 
-// Handle POST requests for client messages
+// @CORE: POST /mcp — 处理客户端消息，支持新建会话和复用已有会话
 app.post("/mcp", async (req: Request, res: Response) => {
   console.log("Received MCP POST request");
   try {
@@ -84,6 +85,7 @@ app.post("/mcp", async (req: Request, res: Response) => {
         },
       });
 
+      // Streamable HTTP — 也是断连清，还多了 DELETE 主动终止
       // Set up onclose handler to clean up transport when closed
       server.server.onclose = async () => {
         const sid = transport.sessionId;
@@ -133,7 +135,7 @@ app.post("/mcp", async (req: Request, res: Response) => {
   }
 });
 
-// Handle GET requests for SSE streams
+// @CORE: GET /mcp — 建立 SSE 流，支持 Last-Event-ID 断线重连
 app.get("/mcp", async (req: Request, res: Response) => {
   console.log("Received MCP GET request");
   const sessionId = req.headers["mcp-session-id"] as string | undefined;
@@ -161,7 +163,7 @@ app.get("/mcp", async (req: Request, res: Response) => {
   await transport!.handleRequest(req, res);
 });
 
-// Handle DELETE requests for session termination
+// @CORE: DELETE /mcp — 终止会话，清理服务端资源
 app.delete("/mcp", async (req: Request, res: Response) => {
   const sessionId = req.headers["mcp-session-id"] as string | undefined;
   if (!sessionId || !transports.has(sessionId)) {

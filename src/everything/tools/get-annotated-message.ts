@@ -3,6 +3,7 @@ import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { MCP_TINY_IMAGE } from "./get-tiny-image.js";
 
+// @LEARN: 演示 content annotations 功能 — priority/audience 元数据可帮助 LLM 按需过滤内容
 // Tool input schema
 const GetAnnotatedMessageSchema = z.object({
   messageType: z
@@ -47,6 +48,7 @@ export const registerGetAnnotatedMessageTool = (server: McpServer) => {
 
     const content: CallToolResult["content"] = [];
 
+    // @CORE: 按不同消息类型赋予不同的 priority 和 audience 值
     // Main message with different priorities/audiences based on type
     if (messageType === "error") {
       content.push({
